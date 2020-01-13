@@ -7,8 +7,8 @@ export class AppService {
   constructor(
     @InjectQueue('bullisue') private readonly bullQueue: Queue
   ) { }
-  getHello(): string {
-    this.bullQueue.add('test', 'data');
+  async getHello() {
+    await this.bullQueue.add('test', 'data');
     return 'Hello World!';
   }
 }

@@ -7,6 +7,7 @@ import { BullModule } from '@nestjs/bull';
 describe('AppModule', () => {
   let appController: AppController;
   let app: TestingModule;
+  const mockFn = jest.fn();
 
   beforeEach(async () => {
     app = await Test.createTestingModule({
@@ -17,6 +18,7 @@ describe('AppModule', () => {
             host: 'localhost',
             port: 6379,
           },
+          processors: [{ name: 'test', callback: mockFn }]
         }),
         IssueConsumer
       ],
@@ -33,8 +35,13 @@ describe('AppModule', () => {
 
   describe('root', () => {
     it('should return "Hello World!"', async () => {
-      expect(appController.getHello()).toBe('Hello World!');
-      await new Promise(res => setTimeout(res, 1000))
+      await appController.getHello();
+      return new Promise(resolve => {
+        setTimeout(() => {
+          expect(mockFn).toBeCalledTimes(1);
+          resolve();
+        }, 1000);
+      });
     });
   });
 });
