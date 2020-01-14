@@ -1,13 +1,13 @@
 import { Processor, Process, OnQueueActive } from '@nestjs/bull';
 import { Job } from 'bull';
 
-@Processor('bullisue')
+@Processor('bullissue')
 export class IssueConsumer {
 
   @Process('test')
   async transcode(job: Job<string>) {
     console.log(job.data);
-    return {};
+    return job.data;
   }
 
   @OnQueueActive()

@@ -1,26 +1,25 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { IssueConsumer } from './app.processor';
 import { BullModule } from '@nestjs/bull';
 
 describe('AppModule', () => {
   let appController: AppController;
   let app: TestingModule;
-  const mockFn = jest.fn();
+  const mockFn = jest.fn(() => 'I was not supposed to run');
 
   beforeEach(async () => {
     app = await Test.createTestingModule({
       imports: [
         BullModule.registerQueue({
-          name: 'bullisue',
+          prefix: `${process.pid}`,
+          name: 'bullissue',
           redis: {
             host: 'localhost',
             port: 6379,
           },
           processors: [{ name: 'test', callback: mockFn }]
         }),
-        IssueConsumer
       ],
       controllers: [AppController],
       providers: [AppService],

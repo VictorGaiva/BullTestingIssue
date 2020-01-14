@@ -7,7 +7,8 @@ import { IssueConsumer } from './app.processor';
 @Module({
   imports: [
     BullModule.registerQueue({
-      name: 'bullisue',
+      prefix: `${process.pid}`,
+      name: 'bullissue',
       redis: {
         host: 'localhost',
         port: 6379,
